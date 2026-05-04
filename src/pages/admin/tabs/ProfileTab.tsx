@@ -103,6 +103,39 @@ export const ProfileTab = () => {
       </section>
 
       <section className="glass rounded-2xl p-6 space-y-4">
+        <h2 className="text-xl font-display">Hero banner & branding</h2>
+        <div className="space-y-2">
+          <Label>Hero banner image</Label>
+          {profile.hero_banner_url && (
+            <img src={profile.hero_banner_url} alt="" className="w-full max-h-48 object-cover rounded-xl border border-border" />
+          )}
+          <Label className="cursor-pointer inline-block">
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadAsset(e.target.files[0], "hero_banner_url")} />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border hover:bg-muted text-sm"><Upload className="h-4 w-4" /> Upload banner</span>
+          </Label>
+        </div>
+        <div className="space-y-2">
+          <Label>Logo</Label>
+          {profile.logo_url && (
+            <img src={profile.logo_url} alt="" className="h-16 object-contain rounded-md border border-border bg-muted p-2" />
+          )}
+          <Label className="cursor-pointer inline-block">
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadAsset(e.target.files[0], "logo_url")} />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border hover:bg-muted text-sm"><Upload className="h-4 w-4" /> Upload logo</span>
+          </Label>
+        </div>
+        <div>
+          <Label>Footer text</Label>
+          <Input
+            value={profile.footer_text ?? ""}
+            placeholder={`© ${new Date().getFullYear()} Formal Science. All rights reserved.`}
+            onChange={(e) => setProfile({ ...profile, footer_text: e.target.value })}
+          />
+        </div>
+        <Button onClick={saveProfile} disabled={busy} className="gradient-hero text-primary-foreground">Save branding</Button>
+      </section>
+
+      <section className="glass rounded-2xl p-6 space-y-4">
         <h2 className="text-xl font-display">Social links</h2>
         {socials.map((s) => (
           <div key={s.id} className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
