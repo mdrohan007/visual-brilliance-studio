@@ -14,16 +14,242 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      photos: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+          storage_path: string | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+          storage_path?: string | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+          storage_path?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          display_name: string
+          email: string | null
+          id: string
+          title: string
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          display_name?: string
+          email?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          display_name?: string
+          email?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          icon_key: string
+          id: string
+          name: string
+          sort_order: number
+          visible: boolean
+          years: number
+        }
+        Insert: {
+          icon_key: string
+          id?: string
+          name: string
+          sort_order?: number
+          visible?: boolean
+          years?: number
+        }
+        Update: {
+          icon_key?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          visible?: boolean
+          years?: number
+        }
+        Relationships: []
+      }
+      social_links: {
+        Row: {
+          id: string
+          platform: string
+          sort_order: number
+          url: string
+          visible: boolean
+        }
+        Insert: {
+          id?: string
+          platform: string
+          sort_order?: number
+          url?: string
+          visible?: boolean
+        }
+        Update: {
+          id?: string
+          platform?: string
+          sort_order?: number
+          url?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      videos: {
+        Row: {
+          category: Database["public"]["Enums"]["video_category"]
+          created_at: string
+          id: string
+          sort_order: number
+          source: Database["public"]["Enums"]["video_source"]
+          storage_path: string | null
+          thumbnail_url: string | null
+          title: string | null
+          url: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["video_category"]
+          created_at?: string
+          id?: string
+          sort_order?: number
+          source?: Database["public"]["Enums"]["video_source"]
+          storage_path?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
+          url: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["video_category"]
+          created_at?: string
+          id?: string
+          sort_order?: number
+          source?: Database["public"]["Enums"]["video_source"]
+          storage_path?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
+      visitor_logs: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string | null
+          path: string | null
+          referrer: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          path?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          path?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      video_category: "premium" | "standard"
+      video_source: "file" | "youtube"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +376,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      video_category: ["premium", "standard"],
+      video_source: ["file", "youtube"],
+    },
   },
 } as const
