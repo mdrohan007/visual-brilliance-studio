@@ -71,7 +71,10 @@ export type Database = {
           bio: string | null
           display_name: string
           email: string | null
+          footer_text: string | null
+          hero_banner_url: string | null
           id: string
+          logo_url: string | null
           title: string
           updated_at: string
           whatsapp: string | null
@@ -81,7 +84,10 @@ export type Database = {
           bio?: string | null
           display_name?: string
           email?: string | null
+          footer_text?: string | null
+          hero_banner_url?: string | null
           id?: string
+          logo_url?: string | null
           title?: string
           updated_at?: string
           whatsapp?: string | null
@@ -91,7 +97,10 @@ export type Database = {
           bio?: string | null
           display_name?: string
           email?: string | null
+          footer_text?: string | null
+          hero_banner_url?: string | null
           id?: string
+          logo_url?: string | null
           title?: string
           updated_at?: string
           whatsapp?: string | null

@@ -31,6 +31,9 @@ export const ProfileTab = () => {
       email: profile.email,
       whatsapp: profile.whatsapp,
       avatar_url: profile.avatar_url,
+      hero_banner_url: profile.hero_banner_url ?? null,
+      logo_url: profile.logo_url ?? null,
+      footer_text: profile.footer_text ?? null,
     }).eq("id", profile.id);
     setBusy(false);
     error ? toast.error(error.message) : toast.success("Profile updated");
@@ -45,6 +48,17 @@ export const ProfileTab = () => {
     const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
     setProfile({ ...profile, avatar_url: publicUrl });
     toast.success("Avatar uploaded — click Save");
+  };
+
+  const uploadAsset = async (file: File, key: "hero_banner_url" | "logo_url") => {
+    if (!profile) return;
+    const ext = file.name.split(".").pop();
+    const path = `${key}-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    if (error) { toast.error(error.message); return; }
+    const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+    setProfile({ ...profile, [key]: publicUrl });
+    toast.success("Uploaded — click Save");
   };
 
   const updateSocial = (id: string, patch: Partial<SocialLink>) =>
@@ -86,6 +100,39 @@ export const ProfileTab = () => {
         </div>
         <div><Label>Bio</Label><Textarea rows={3} value={profile.bio ?? ""} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} /></div>
         <Button onClick={saveProfile} disabled={busy} className="gradient-hero text-primary-foreground">Save profile</Button>
+      </section>
+
+      <section className="glass rounded-2xl p-6 space-y-4">
+        <h2 className="text-xl font-display">Hero banner & branding</h2>
+        <div className="space-y-2">
+          <Label>Hero banner image</Label>
+          {profile.hero_banner_url && (
+            <img src={profile.hero_banner_url} alt="" className="w-full max-h-48 object-cover rounded-xl border border-border" />
+          )}
+          <Label className="cursor-pointer inline-block">
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadAsset(e.target.files[0], "hero_banner_url")} />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border hover:bg-muted text-sm"><Upload className="h-4 w-4" /> Upload banner</span>
+          </Label>
+        </div>
+        <div className="space-y-2">
+          <Label>Logo</Label>
+          {profile.logo_url && (
+            <img src={profile.logo_url} alt="" className="h-16 object-contain rounded-md border border-border bg-muted p-2" />
+          )}
+          <Label className="cursor-pointer inline-block">
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadAsset(e.target.files[0], "logo_url")} />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border hover:bg-muted text-sm"><Upload className="h-4 w-4" /> Upload logo</span>
+          </Label>
+        </div>
+        <div>
+          <Label>Footer text</Label>
+          <Input
+            value={profile.footer_text ?? ""}
+            placeholder={`© ${new Date().getFullYear()} Formal Science. All rights reserved.`}
+            onChange={(e) => setProfile({ ...profile, footer_text: e.target.value })}
+          />
+        </div>
+        <Button onClick={saveProfile} disabled={busy} className="gradient-hero text-primary-foreground">Save branding</Button>
       </section>
 
       <section className="glass rounded-2xl p-6 space-y-4">
