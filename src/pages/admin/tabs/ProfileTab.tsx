@@ -31,6 +31,9 @@ export const ProfileTab = () => {
       email: profile.email,
       whatsapp: profile.whatsapp,
       avatar_url: profile.avatar_url,
+      hero_banner_url: profile.hero_banner_url ?? null,
+      logo_url: profile.logo_url ?? null,
+      footer_text: profile.footer_text ?? null,
     }).eq("id", profile.id);
     setBusy(false);
     error ? toast.error(error.message) : toast.success("Profile updated");
@@ -45,6 +48,17 @@ export const ProfileTab = () => {
     const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
     setProfile({ ...profile, avatar_url: publicUrl });
     toast.success("Avatar uploaded — click Save");
+  };
+
+  const uploadAsset = async (file: File, key: "hero_banner_url" | "logo_url") => {
+    if (!profile) return;
+    const ext = file.name.split(".").pop();
+    const path = `${key}-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    if (error) { toast.error(error.message); return; }
+    const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+    setProfile({ ...profile, [key]: publicUrl });
+    toast.success("Uploaded — click Save");
   };
 
   const updateSocial = (id: string, patch: Partial<SocialLink>) =>
