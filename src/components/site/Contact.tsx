@@ -26,10 +26,11 @@ export const Contact = () => {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.from("contact_messages").insert(parsed.data);
+    const payload = { name: parsed.data.name, email: parsed.data.email, message: parsed.data.message };
+    const { error } = await supabase.from("contact_messages").insert(payload);
     if (!error) {
       // Fire-and-forget email notification
-      supabase.functions.invoke("notify-contact", { body: parsed.data }).catch(() => {});
+      supabase.functions.invoke("notify-contact", { body: payload }).catch(() => {});
     }
     setLoading(false);
     if (error) {
