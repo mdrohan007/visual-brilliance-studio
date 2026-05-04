@@ -1,13 +1,14 @@
-import { Home, LayoutGrid, User, Sparkles, Mail, Sun, Moon, Shield } from "lucide-react";
+import { Home, Film, User, Sparkles, Mail, Sun, Moon, Shield } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
-type Section = "home" | "portfolio" | "about" | "skills" | "contact";
+export type Section = "home" | "videos" | "about" | "skills" | "contact";
 
 const items: { id: Section; icon: React.ComponentType<{ className?: string }>; label: string }[] = [
   { id: "home", icon: Home, label: "Home" },
-  { id: "portfolio", icon: LayoutGrid, label: "Portfolio" },
+  { id: "videos", icon: Film, label: "Videos" },
   { id: "about", icon: User, label: "About" },
   { id: "skills", icon: Sparkles, label: "Skills" },
   { id: "contact", icon: Mail, label: "Contact" },
@@ -18,7 +19,7 @@ export const BottomNav = ({ active, onNavigate }: { active: Section; onNavigate:
   const { isAdmin } = useAuth();
 
   return (
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-2 sm:px-3 py-2 glass rounded-full shadow-card flex items-center gap-1 max-w-[calc(100vw-1rem)]">
+    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-2 py-1.5 glass rounded-full shadow-card flex items-center gap-0.5 max-w-[calc(100vw-1rem)]">
       {items.map((it) => {
         const Icon = it.icon;
         const isActive = active === it.id;
@@ -28,11 +29,16 @@ export const BottomNav = ({ active, onNavigate }: { active: Section; onNavigate:
             aria-label={it.label}
             title={it.label}
             onClick={() => onNavigate(it.id)}
-            className={`relative h-10 w-10 sm:h-11 sm:w-11 rounded-full flex items-center justify-center transition-all ${
-              isActive ? "gradient-hero text-primary-foreground shadow-glow scale-110" : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
-            }`}
+            className="relative h-11 w-11 rounded-full flex items-center justify-center transition-colors"
           >
-            <Icon className="h-[18px] w-[18px]" />
+            {isActive && (
+              <motion.span
+                layoutId="nav-pill"
+                className="absolute inset-0 rounded-full gradient-hero shadow-glow"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+            <Icon className={`relative h-[18px] w-[18px] transition-colors ${isActive ? "text-primary-foreground" : "text-foreground/70"}`} />
           </button>
         );
       })}
@@ -41,7 +47,7 @@ export const BottomNav = ({ active, onNavigate }: { active: Section; onNavigate:
         onClick={toggle}
         aria-label="Toggle theme"
         title="Toggle theme"
-        className="h-10 w-10 sm:h-11 sm:w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
+        className="h-11 w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
       >
         {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
       </button>
@@ -50,7 +56,7 @@ export const BottomNav = ({ active, onNavigate }: { active: Section; onNavigate:
           to="/admin"
           aria-label="Admin"
           title="Admin Dashboard"
-          className="h-10 w-10 sm:h-11 sm:w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+          className="h-11 w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground hover:bg-foreground/5"
         >
           <Shield className="h-[18px] w-[18px]" />
         </Link>
