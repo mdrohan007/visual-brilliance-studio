@@ -9,6 +9,12 @@ export type Profile = {
   hero_banner_url?: string | null;
   logo_url?: string | null;
   footer_text?: string | null;
+  favicon_url?: string | null;
+  bg_home_url?: string | null;
+  bg_videos_url?: string | null;
+  bg_about_url?: string | null;
+  bg_skills_url?: string | null;
+  bg_contact_url?: string | null;
 };
 
 export type SocialLink = {
@@ -45,4 +51,13 @@ export type Video = {
   thumbnail_url: string | null;
   storage_path: string | null;
   sort_order: number;
+};
+
+export type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  created_at: string;
+  is_read: boolean;
 };

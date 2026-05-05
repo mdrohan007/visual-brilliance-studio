@@ -19,6 +19,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          is_read: boolean
           message: string
           name: string
         }
@@ -26,6 +27,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          is_read?: boolean
           message: string
           name: string
         }
@@ -33,6 +35,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          is_read?: boolean
           message?: string
           name?: string
         }
@@ -68,9 +71,15 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bg_about_url: string | null
+          bg_contact_url: string | null
+          bg_home_url: string | null
+          bg_skills_url: string | null
+          bg_videos_url: string | null
           bio: string | null
           display_name: string
           email: string | null
+          favicon_url: string | null
           footer_text: string | null
           hero_banner_url: string | null
           id: string
@@ -81,9 +90,15 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          bg_about_url?: string | null
+          bg_contact_url?: string | null
+          bg_home_url?: string | null
+          bg_skills_url?: string | null
+          bg_videos_url?: string | null
           bio?: string | null
           display_name?: string
           email?: string | null
+          favicon_url?: string | null
           footer_text?: string | null
           hero_banner_url?: string | null
           id?: string
@@ -94,9 +109,15 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          bg_about_url?: string | null
+          bg_contact_url?: string | null
+          bg_home_url?: string | null
+          bg_skills_url?: string | null
+          bg_videos_url?: string | null
           bio?: string | null
           display_name?: string
           email?: string | null
+          favicon_url?: string | null
           footer_text?: string | null
           hero_banner_url?: string | null
           id?: string

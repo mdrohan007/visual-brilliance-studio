@@ -34,6 +34,12 @@ export const ProfileTab = () => {
       hero_banner_url: profile.hero_banner_url ?? null,
       logo_url: profile.logo_url ?? null,
       footer_text: profile.footer_text ?? null,
+      favicon_url: profile.favicon_url ?? null,
+      bg_home_url: profile.bg_home_url ?? null,
+      bg_videos_url: profile.bg_videos_url ?? null,
+      bg_about_url: profile.bg_about_url ?? null,
+      bg_skills_url: profile.bg_skills_url ?? null,
+      bg_contact_url: profile.bg_contact_url ?? null,
     }).eq("id", profile.id);
     setBusy(false);
     error ? toast.error(error.message) : toast.success("Profile updated");
@@ -50,7 +56,7 @@ export const ProfileTab = () => {
     toast.success("Avatar uploaded — click Save");
   };
 
-  const uploadAsset = async (file: File, key: "hero_banner_url" | "logo_url") => {
+  const uploadAsset = async (file: File, key: keyof Profile) => {
     if (!profile) return;
     const ext = file.name.split(".").pop();
     const path = `${key}-${Date.now()}.${ext}`;
@@ -147,6 +153,53 @@ export const ProfileTab = () => {
             </div>
           </div>
         ))}
+      </section>
+
+      <section className="glass rounded-2xl p-6 space-y-4">
+        <h2 className="text-xl font-display">Favicon / Tab icon</h2>
+        <div className="flex items-center gap-4">
+          {profile.favicon_url ? (
+            <img src={profile.favicon_url} alt="" className="h-12 w-12 rounded-md border border-border bg-muted p-1" />
+          ) : (
+            <div className="h-12 w-12 rounded-md bg-muted" />
+          )}
+          <Label className="cursor-pointer">
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadAsset(e.target.files[0], "favicon_url")} />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border hover:bg-muted text-sm"><Upload className="h-4 w-4" /> Upload favicon</span>
+          </Label>
+        </div>
+        <Button onClick={saveProfile} disabled={busy} className="gradient-hero text-primary-foreground">Save favicon</Button>
+      </section>
+
+      <section className="glass rounded-2xl p-6 space-y-4">
+        <h2 className="text-xl font-display">Page backgrounds</h2>
+        <p className="text-sm text-muted-foreground">Upload a custom background image per page. Leave blank to use the default animated background.</p>
+        {([
+          ["bg_home_url", "Home"],
+          ["bg_videos_url", "Portfolio"],
+          ["bg_about_url", "About"],
+          ["bg_skills_url", "Skills"],
+          ["bg_contact_url", "Contact"],
+        ] as const).map(([key, label]) => (
+          <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-3 border-t border-border/50 pt-3">
+            <span className="w-28 text-sm font-medium">{label}</span>
+            {profile[key] ? (
+              <img src={profile[key] as string} alt="" className="h-16 w-28 object-cover rounded-md border border-border" />
+            ) : (
+              <div className="h-16 w-28 rounded-md bg-muted" />
+            )}
+            <Label className="cursor-pointer">
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && uploadAsset(e.target.files[0], key)} />
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border hover:bg-muted text-xs"><Upload className="h-3 w-3" /> Upload</span>
+            </Label>
+            {profile[key] && (
+              <Button size="sm" variant="ghost" onClick={() => setProfile({ ...profile, [key]: null } as any)}>
+                Clear
+              </Button>
+            )}
+          </div>
+        ))}
+        <Button onClick={saveProfile} disabled={busy} className="gradient-hero text-primary-foreground">Save backgrounds</Button>
       </section>
 
       <section className="glass rounded-2xl p-6 space-y-4">

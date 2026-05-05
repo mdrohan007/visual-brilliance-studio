@@ -58,23 +58,23 @@
   .dark {
     /* Dark: Moody Blues #1a1d29 + Slate Blue #7d8491 */
     --background: 228 22% 13%;
-    --foreground: 215 12% 85%;
+    --foreground: 40 30% 96%;
 
     --card: 228 22% 16%;
-    --card-foreground: 215 12% 90%;
+    --card-foreground: 40 30% 96%;
 
     --popover: 228 22% 16%;
-    --popover-foreground: 215 12% 90%;
+    --popover-foreground: 40 30% 96%;
 
     --primary: 215 9% 53%;
     --primary-foreground: 228 22% 10%;
     --primary-glow: 215 18% 65%;
 
     --secondary: 228 20% 20%;
-    --secondary-foreground: 215 12% 88%;
+    --secondary-foreground: 40 30% 96%;
 
     --muted: 228 18% 22%;
-    --muted-foreground: 215 10% 65%;
+    --muted-foreground: 40 15% 78%;
 
     --accent: 215 18% 60%;
     --accent-foreground: 228 22% 10%;

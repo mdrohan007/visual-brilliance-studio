@@ -9,7 +9,6 @@ import { Skills } from "@/components/site/Skills";
 import { Contact } from "@/components/site/Contact";
 import { BottomNav, type Section } from "@/components/site/BottomNav";
 import { WhatsAppFab } from "@/components/site/WhatsAppFab";
-import { Footer } from "@/components/site/Footer";
 import { AnimatedBackground } from "@/components/site/AnimatedBackground";
 import { useVisitorLog } from "@/hooks/useVisitorLog";
 
@@ -36,6 +35,18 @@ const Index = () => {
     })();
   }, []);
 
+  // Update favicon dynamically
+  useEffect(() => {
+    if (!profile?.favicon_url) return;
+    let link = document.querySelector<HTMLLinkElement>("link[rel='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = profile.favicon_url;
+  }, [profile?.favicon_url]);
+
   const goto = (id: Section) => {
     setActive(id);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -49,9 +60,27 @@ const Index = () => {
     contact: <Contact />,
   };
 
+  const bgMap: Record<Section, string | null | undefined> = {
+    home: profile?.bg_home_url,
+    videos: profile?.bg_videos_url,
+    about: profile?.bg_about_url,
+    skills: profile?.bg_skills_url,
+    contact: profile?.bg_contact_url,
+  };
+  const customBg = bgMap[active];
+
   return (
     <main className="min-h-screen flex flex-col pb-28 relative">
-      <AnimatedBackground variant={active} />
+      {customBg ? (
+        <div
+          className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${customBg})` }}
+        >
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
+        </div>
+      ) : (
+        <AnimatedBackground variant={active} />
+      )}
 
       <div className="flex-1">
         <AnimatePresence mode="wait">
@@ -67,7 +96,6 @@ const Index = () => {
         </AnimatePresence>
       </div>
 
-      <Footer profile={profile} />
       <BottomNav active={active} onNavigate={goto} />
       <WhatsAppFab number={profile?.whatsapp ?? "01829463474"} />
     </main>
