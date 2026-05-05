@@ -1,7 +1,13 @@
+import { Link } from "react-router-dom";
+import { LogIn, LogOut, ShieldCheck } from "lucide-react";
 import { Profile, SocialLink } from "@/types/site";
 import { socialIcon, socialLabel } from "@/lib/icons";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export const About = ({ profile, socials }: { profile: Profile | null; socials: SocialLink[] }) => {
+  const { user, isAdmin } = useAuth();
   const visible = socials.filter((s) => s.visible && s.url);
   return (
     <section id="about" className="px-4 py-20 max-w-4xl mx-auto">
@@ -44,6 +50,25 @@ export const About = ({ profile, socials }: { profile: Profile | null; socials: 
             })}
           </div>
         )}
+
+        <div className="mt-8 pt-6 border-t border-border/50 flex justify-center">
+          {!user ? (
+            <Button asChild variant="outline" size="sm" className="rounded-full">
+              <Link to="/auth"><LogIn className="h-4 w-4 mr-2" />Admin login</Link>
+            </Button>
+          ) : (
+            <div className="flex gap-2">
+              {isAdmin && (
+                <Button asChild size="sm" className="rounded-full gradient-hero text-primary-foreground">
+                  <Link to="/admin"><ShieldCheck className="h-4 w-4 mr-2" />Admin dashboard</Link>
+                </Button>
+              )}
+              <Button variant="outline" size="sm" className="rounded-full" onClick={() => supabase.auth.signOut()}>
+                <LogOut className="h-4 w-4 mr-2" />Sign out
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
