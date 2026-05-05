@@ -34,6 +34,12 @@ export const ProfileTab = () => {
       hero_banner_url: profile.hero_banner_url ?? null,
       logo_url: profile.logo_url ?? null,
       footer_text: profile.footer_text ?? null,
+      favicon_url: profile.favicon_url ?? null,
+      bg_home_url: profile.bg_home_url ?? null,
+      bg_videos_url: profile.bg_videos_url ?? null,
+      bg_about_url: profile.bg_about_url ?? null,
+      bg_skills_url: profile.bg_skills_url ?? null,
+      bg_contact_url: profile.bg_contact_url ?? null,
     }).eq("id", profile.id);
     setBusy(false);
     error ? toast.error(error.message) : toast.success("Profile updated");
@@ -50,7 +56,7 @@ export const ProfileTab = () => {
     toast.success("Avatar uploaded — click Save");
   };
 
-  const uploadAsset = async (file: File, key: "hero_banner_url" | "logo_url") => {
+  const uploadAsset = async (file: File, key: keyof Profile) => {
     if (!profile) return;
     const ext = file.name.split(".").pop();
     const path = `${key}-${Date.now()}.${ext}`;
