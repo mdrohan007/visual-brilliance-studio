@@ -10,12 +10,29 @@ import { PhotosTab } from "./tabs/PhotosTab";
 import { VideosTab } from "./tabs/VideosTab";
 import { SkillsTab } from "./tabs/SkillsTab";
 import { MessagesTab } from "./tabs/MessagesTab";
-import { AnalyticsTab } from "./tabs/AnalyticsTab";
 import { AdminsTab } from "./tabs/AdminsTab";
 
 export default function Admin() {
   const { user, isAdmin, loading } = useAuth();
   const nav = useNavigate();
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    const load = async () => {
+      const { count } = await supabase
+        .from("contact_messages")
+        .select("*", { count: "exact", head: true })
+        .eq("is_read", false);
+      setUnread(count ?? 0);
+    };
+    load();
+    const ch = supabase
+      .channel("unread-messages")
+      .on("postgres_changes", { event: "*", schema: "public", table: "contact_messages" }, load)
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [isAdmin]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Loading...</div>;
   if (!user) return <Navigate to="/auth" replace />;
@@ -40,8 +57,14 @@ export default function Admin() {
           <TabsTrigger value="photos">Photos</TabsTrigger>
           <TabsTrigger value="videos">Videos</TabsTrigger>
           <TabsTrigger value="skills">Skills</TabsTrigger>
-          <TabsTrigger value="messages">Messages</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="messages" className="relative">
+            Messages
+            {unread > 0 && (
+              <span className="ml-2 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold">
+                {unread}
+              </span>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="admins">Admins</TabsTrigger>
         </TabsList>
         <TabsContent value="profile"><ProfileTab /></TabsContent>
@@ -49,7 +72,6 @@ export default function Admin() {
         <TabsContent value="videos"><VideosTab /></TabsContent>
         <TabsContent value="skills"><SkillsTab /></TabsContent>
         <TabsContent value="messages"><MessagesTab /></TabsContent>
-        <TabsContent value="analytics"><AnalyticsTab /></TabsContent>
         <TabsContent value="admins"><AdminsTab /></TabsContent>
       </Tabs>
     </main>
