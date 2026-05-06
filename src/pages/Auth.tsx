@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Shield } from "lucide-react";
+import { Shield, Eye, EyeOff } from "lucide-react";
 
 export default function Auth() {
   const nav = useNavigate();
@@ -15,6 +15,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
 
   useEffect(() => {
     if (!loading && user && isAdmin) nav("/admin", { replace: true });
@@ -62,7 +63,25 @@ export default function Auth() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPwd ? "text" : "password"}
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPwd((v) => !v)}
+                aria-label={showPwd ? "Hide password" : "Show password"}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
           <Button type="submit" disabled={busy} className="w-full gradient-hero text-primary-foreground rounded-full">
             {busy ? "Please wait..." : mode === "signin" ? "Sign in" : "Create admin"}
