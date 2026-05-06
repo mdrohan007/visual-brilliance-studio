@@ -16,6 +16,14 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
+  const [adminExists, setAdminExists] = useState<boolean>(true);
+
+  useEffect(() => {
+    (supabase.rpc as any)("admin_exists").then(({ data }: any) => {
+      setAdminExists(!!data);
+      if (data) setMode("signin");
+    });
+  }, []);
 
   useEffect(() => {
     if (!loading && user && isAdmin) nav("/admin", { replace: true });
@@ -26,6 +34,9 @@ export default function Auth() {
     setBusy(true);
     try {
       if (mode === "signup") {
+        if (adminExists) {
+          throw new Error("Admin already exists. Sign-up is disabled.");
+        }
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -86,9 +97,11 @@ export default function Auth() {
           <Button type="submit" disabled={busy} className="w-full gradient-hero text-primary-foreground rounded-full">
             {busy ? "Please wait..." : mode === "signin" ? "Sign in" : "Create admin"}
           </Button>
-          <button type="button" onClick={() => setMode((m) => (m === "signin" ? "signup" : "signin"))} className="w-full text-xs text-muted-foreground hover:text-foreground">
-            {mode === "signin" ? "First admin? Create account" : "Have an account? Sign in"}
-          </button>
+          {!adminExists && (
+            <button type="button" onClick={() => setMode((m) => (m === "signin" ? "signup" : "signin"))} className="w-full text-xs text-muted-foreground hover:text-foreground">
+              {mode === "signin" ? "First admin? Create account" : "Have an account? Sign in"}
+            </button>
+          )}
         </form>
       </div>
     </main>
