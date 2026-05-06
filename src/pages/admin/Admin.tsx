@@ -71,9 +71,11 @@ export default function Admin() {
           <h1 className="text-3xl sm:text-4xl font-display gradient-text">Admin Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">{user.email}</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => nav("/")}><Home className="h-4 w-4 mr-2" />Site</Button>
-          <Button variant="outline" size="sm" onClick={async () => { await supabase.auth.signOut(); nav("/"); }}><LogOut className="h-4 w-4 mr-2" />Sign out</Button>
+        <div className="flex gap-2 shrink-0">
+          <Button variant="outline" size="icon" className="sm:hidden" aria-label="Site" onClick={() => nav("/")}><Home className="h-4 w-4" /></Button>
+          <Button variant="outline" size="icon" className="sm:hidden" aria-label="Sign out" onClick={async () => { await supabase.auth.signOut(); nav("/"); }}><LogOut className="h-4 w-4" /></Button>
+          <Button variant="outline" size="sm" className="hidden sm:inline-flex" onClick={() => nav("/")}><Home className="h-4 w-4 mr-2" />Site</Button>
+          <Button variant="outline" size="sm" className="hidden sm:inline-flex" onClick={async () => { await supabase.auth.signOut(); nav("/"); }}><LogOut className="h-4 w-4 mr-2" />Sign out</Button>
         </div>
       </header>
 
