@@ -24,12 +24,15 @@ export const BottomNav = ({ active, onNavigate }: { active: Section; onNavigate:
         const Icon = it.icon;
         const isActive = active === it.id;
         return (
-          <button
+          <motion.button
             key={it.id}
             aria-label={it.label}
             title={it.label}
             onClick={() => onNavigate(it.id)}
-            className="relative h-11 w-11 rounded-full flex items-center justify-center transition-colors"
+            whileHover={{ scale: 1.15, rotate: -6 }}
+            whileTap={{ scale: 0.85, rotate: 8 }}
+            transition={{ type: "spring", stiffness: 500, damping: 18 }}
+            className="relative h-11 w-11 rounded-full flex items-center justify-center"
           >
             {isActive && (
               <motion.span
@@ -39,27 +42,32 @@ export const BottomNav = ({ active, onNavigate }: { active: Section; onNavigate:
               />
             )}
             <Icon className={`relative h-[18px] w-[18px] transition-colors ${isActive ? "text-primary-foreground" : "text-foreground/70"}`} />
-          </button>
+          </motion.button>
         );
       })}
       <div className="w-px h-6 bg-border mx-1" />
-      <button
+      <motion.button
         onClick={toggle}
         aria-label="Toggle theme"
         title="Toggle theme"
-        className="h-11 w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
+        whileHover={{ scale: 1.15, rotate: 20 }}
+        whileTap={{ scale: 0.85, rotate: -20 }}
+        transition={{ type: "spring", stiffness: 500, damping: 18 }}
+        className="h-11 w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground"
       >
         {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
-      </button>
+      </motion.button>
       {isAdmin && (
-        <Link
-          to="/admin"
-          aria-label="Admin"
-          title="Admin Dashboard"
-          className="h-11 w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground hover:bg-foreground/5"
-        >
-          <Shield className="h-[18px] w-[18px]" />
-        </Link>
+        <motion.div whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }}>
+          <Link
+            to="/admin"
+            aria-label="Admin"
+            title="Admin Dashboard"
+            className="h-11 w-11 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground"
+          >
+            <Shield className="h-[18px] w-[18px]" />
+          </Link>
+        </motion.div>
       )}
     </nav>
   );
