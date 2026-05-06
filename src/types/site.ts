@@ -15,6 +15,7 @@ export type Profile = {
   bg_about_url?: string | null;
   bg_skills_url?: string | null;
   bg_contact_url?: string | null;
+  maintenance_mode?: boolean;
 };
 
 export type SocialLink = {

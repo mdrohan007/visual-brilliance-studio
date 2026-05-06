@@ -9,9 +9,10 @@ export const WhatsAppFab = ({ number }: { number: string }) => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"
-      className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-40 h-14 w-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-glow hover:scale-110 transition-transform animate-float"
+      className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-40 h-14 w-14 rounded-full glass flex items-center justify-center text-[#25D366] hover:text-[#25D366] transition-colors"
+      style={{ backdropFilter: "blur(20px) saturate(180%)" }}
     >
-      <MessageCircle className="h-7 w-7 fill-white" />
+      <MessageCircle className="h-7 w-7" />
     </a>
   );
 };

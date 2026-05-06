@@ -6,8 +6,11 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { getYouTubeEmbed, getYouTubeThumb } from "@/lib/youtube";
 import { Play, Crown, Sparkles, Image as ImageIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Videos = ({ videos }: { videos: Video[] }) => {
+  const { isAdmin } = useAuth();
+  const noCtx = (e: React.MouseEvent) => { if (!isAdmin) e.preventDefault(); };
   const [open, setOpen] = useState<Video | null>(null);
   const [photoOpen, setPhotoOpen] = useState<Photo | null>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -40,7 +43,7 @@ export const Videos = ({ videos }: { videos: Video[] }) => {
               className="group relative w-full overflow-hidden rounded-2xl shadow-card hover:shadow-glow transition-all bg-card aspect-video text-left"
             >
               {thumb ? (
-                <img src={thumb} alt={v.title || "Video"} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={thumb} alt={v.title || "Video"} loading="lazy" draggable={false} onContextMenu={noCtx} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 select-none" />
               ) : (
                 <div className="absolute inset-0 bg-muted flex items-center justify-center">
                   <Play className="h-10 w-10 text-muted-foreground" />
@@ -75,7 +78,7 @@ export const Videos = ({ videos }: { videos: Video[] }) => {
             onClick={() => setPhotoOpen(p)}
             className="pin-item block w-full overflow-hidden rounded-2xl shadow-card hover:shadow-glow transition-all"
           >
-            <img src={p.image_url} alt={p.title || "Photo"} loading="lazy" className="w-full h-auto block" />
+            <img src={p.image_url} alt={p.title || "Photo"} loading="lazy" draggable={false} onContextMenu={noCtx} className="w-full h-auto block select-none" />
           </motion.button>
         ))}
       </div>
@@ -118,7 +121,16 @@ export const Videos = ({ videos }: { videos: Video[] }) => {
                   className="w-full h-full"
                 />
               ) : (
-                <video src={open.url} controls autoPlay playsInline className="w-full h-full" />
+                <video
+                  src={open.url}
+                  controls
+                  autoPlay
+                  playsInline
+                  onContextMenu={noCtx}
+                  controlsList={isAdmin ? undefined : "nodownload noplaybackrate noremoteplayback"}
+                  disablePictureInPicture={!isAdmin}
+                  className="w-full h-full"
+                />
               )}
             </div>
           )}
@@ -128,7 +140,7 @@ export const Videos = ({ videos }: { videos: Video[] }) => {
       <Dialog open={!!photoOpen} onOpenChange={(o) => !o && setPhotoOpen(null)}>
         <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background border-border">
           {photoOpen && (
-            <img src={photoOpen.image_url} alt={photoOpen.title || "Photo"} className="w-full h-auto" />
+            <img src={photoOpen.image_url} alt={photoOpen.title || "Photo"} draggable={false} onContextMenu={noCtx} className="w-full h-auto select-none" />
           )}
         </DialogContent>
       </Dialog>

@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { LogIn, LogOut, ShieldCheck } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { LogOut, ShieldCheck } from "lucide-react";
+import { useRef } from "react";
 import { Profile, SocialLink } from "@/types/site";
 import { socialIcon, socialLabel } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,17 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const About = ({ profile, socials }: { profile: Profile | null; socials: SocialLink[] }) => {
   const { user, isAdmin } = useAuth();
+  const nav = useNavigate();
+  const tapsRef = useRef<{ count: number; timer: any }>({ count: 0, timer: null });
+  const handleSecretTap = () => {
+    tapsRef.current.count += 1;
+    clearTimeout(tapsRef.current.timer);
+    tapsRef.current.timer = setTimeout(() => { tapsRef.current.count = 0; }, 1500);
+    if (tapsRef.current.count >= 5) {
+      tapsRef.current.count = 0;
+      nav("/auth");
+    }
+  };
   const visible = socials.filter((s) => s.visible && s.url);
   return (
     <section id="about" className="px-4 py-20 max-w-4xl mx-auto">
@@ -53,9 +65,12 @@ export const About = ({ profile, socials }: { profile: Profile | null; socials: 
 
         <div className="mt-8 pt-6 border-t border-border/50 flex justify-center">
           {!user ? (
-            <Button asChild variant="outline" size="sm" className="rounded-full">
-              <Link to="/auth"><LogIn className="h-4 w-4 mr-2" />Admin login</Link>
-            </Button>
+            <button
+              type="button"
+              aria-label="."
+              onClick={handleSecretTap}
+              className="h-2 w-2 rounded-full bg-foreground/20 hover:bg-foreground/40 transition-colors"
+            />
           ) : (
             <div className="flex gap-2">
               {isAdmin && (

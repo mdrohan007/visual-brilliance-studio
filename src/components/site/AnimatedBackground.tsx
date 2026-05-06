@@ -4,20 +4,7 @@ type Variant = "home" | "videos" | "about" | "skills" | "contact";
 
 export const AnimatedBackground = ({ variant }: { variant: Variant }) => {
   if (variant === "home") {
-    return (
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute -top-40 -left-40 h-[40rem] w-[40rem] rounded-full bg-primary/25 blur-[140px]"
-          animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -right-40 h-[35rem] w-[35rem] rounded-full bg-accent/25 blur-[140px]"
-          animate={{ x: [0, -50, 0], y: [0, -40, 0] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </div>
-    );
+    return null;
   }
   if (variant === "videos") {
     // film strip / scanlines
