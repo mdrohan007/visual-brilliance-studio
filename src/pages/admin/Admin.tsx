@@ -4,7 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { LogOut, Home } from "lucide-react";
+import { LogOut, Home, Power } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
 import { ProfileTab } from "./tabs/ProfileTab";
 import { PhotosTab } from "./tabs/PhotosTab";
 import { VideosTab } from "./tabs/VideosTab";
@@ -16,6 +18,30 @@ export default function Admin() {
   const { user, isAdmin, loading } = useAuth();
   const nav = useNavigate();
   const [unread, setUnread] = useState(0);
+  const [maintenance, setMaintenance] = useState<boolean>(false);
+  const [profileId, setProfileId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    supabase.from("profiles").select("id, maintenance_mode").limit(1).maybeSingle().then(({ data }) => {
+      if (data) {
+        setProfileId((data as any).id);
+        setMaintenance(!!(data as any).maintenance_mode);
+      }
+    });
+  }, [isAdmin]);
+
+  const toggleMaintenance = async (v: boolean) => {
+    if (!profileId) return;
+    setMaintenance(v);
+    const { error } = await supabase.from("profiles").update({ maintenance_mode: v }).eq("id", profileId);
+    if (error) {
+      setMaintenance(!v);
+      toast.error(error.message);
+    } else {
+      toast.success(v ? "Maintenance mode ON — site is OFF for visitors" : "Site is back ON");
+    }
+  };
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -39,7 +65,7 @@ export default function Admin() {
   if (!isAdmin) return <main className="min-h-screen flex items-center justify-center px-4 text-center"><div><p className="text-muted-foreground mb-4">You don't have admin access.</p><Button onClick={() => supabase.auth.signOut()}>Sign out</Button></div></main>;
 
   return (
-    <main className="min-h-screen px-4 py-8 max-w-6xl mx-auto">
+    <main className="min-h-screen px-4 py-8 pb-28 max-w-6xl mx-auto">
       <header className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl sm:text-4xl font-display gradient-text">Admin Dashboard</h1>
@@ -74,6 +100,14 @@ export default function Admin() {
         <TabsContent value="messages"><MessagesTab /></TabsContent>
         <TabsContent value="admins"><AdminsTab /></TabsContent>
       </Tabs>
+
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 glass rounded-full shadow-card px-4 py-2.5 flex items-center gap-3">
+        <Power className={`h-4 w-4 ${maintenance ? "text-destructive" : "text-green-500"}`} />
+        <span className="text-sm font-medium whitespace-nowrap">
+          {maintenance ? "Site: OFF (Maintenance)" : "Site: ON"}
+        </span>
+        <Switch checked={maintenance} onCheckedChange={toggleMaintenance} />
+      </div>
     </main>
   );
 }
