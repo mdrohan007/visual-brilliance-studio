@@ -23,7 +23,7 @@ export const Hero = ({ profile, onExplore }: { profile: Profile | null; onExplor
         {/* Cover banner */}
         <div className="relative w-full aspect-[16/6] bg-muted">
           {banner ? (
-            <img src={banner} alt="Cover" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={banner} alt="Cover" draggable={false} onContextMenu={(e) => !isAdmin && e.preventDefault()} className="absolute inset-0 w-full h-full object-cover select-none" />
           ) : (
             <div className="absolute inset-0 gradient-hero" />
           )}
