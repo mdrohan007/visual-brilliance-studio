@@ -92,17 +92,19 @@ export const Videos = ({ videos }: { videos: Video[] }) => {
       </div>
 
       <Tabs defaultValue="premium" className="w-full">
-        <TabsList className="mx-auto mb-8 flex w-fit gap-1 glass rounded-full p-1">
-          <TabsTrigger value="premium" className="rounded-full px-5 gap-2 data-[state=active]:gradient-hero data-[state=active]:text-primary-foreground">
-            <Crown className="h-4 w-4" /> Premium
-          </TabsTrigger>
-          <TabsTrigger value="standard" className="rounded-full px-5 gap-2 data-[state=active]:gradient-hero data-[state=active]:text-primary-foreground">
-            <Sparkles className="h-4 w-4" /> Standard
-          </TabsTrigger>
-          <TabsTrigger value="photos" className="rounded-full px-5 gap-2 data-[state=active]:gradient-hero data-[state=active]:text-primary-foreground">
-            <ImageIcon className="h-4 w-4" /> Photos
-          </TabsTrigger>
-        </TabsList>
+        <div className="mb-8 -mx-4 px-4 overflow-x-auto no-scrollbar">
+          <TabsList className="mx-auto flex w-max gap-1 glass rounded-full p-1 flex-nowrap">
+            <TabsTrigger value="premium" className="shrink-0 whitespace-nowrap rounded-full px-5 gap-2 data-[state=active]:gradient-hero data-[state=active]:text-primary-foreground">
+              <Crown className="h-4 w-4" /> Premium
+            </TabsTrigger>
+            <TabsTrigger value="standard" className="shrink-0 whitespace-nowrap rounded-full px-5 gap-2 data-[state=active]:gradient-hero data-[state=active]:text-primary-foreground">
+              <Sparkles className="h-4 w-4" /> Standard
+            </TabsTrigger>
+            <TabsTrigger value="photos" className="shrink-0 whitespace-nowrap rounded-full px-5 gap-2 data-[state=active]:gradient-hero data-[state=active]:text-primary-foreground">
+              <ImageIcon className="h-4 w-4" /> Photos
+            </TabsTrigger>
+          </TabsList>
+        </div>
         <TabsContent value="premium">{grid(premium)}</TabsContent>
         <TabsContent value="standard">{grid(standard)}</TabsContent>
         <TabsContent value="photos">{photoGrid()}</TabsContent>
