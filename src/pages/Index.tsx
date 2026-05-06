@@ -11,9 +11,11 @@ import { BottomNav, type Section } from "@/components/site/BottomNav";
 import { WhatsAppFab } from "@/components/site/WhatsAppFab";
 import { AnimatedBackground } from "@/components/site/AnimatedBackground";
 import { useVisitorLog } from "@/hooks/useVisitorLog";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   useVisitorLog();
+  const { isAdmin } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [socials, setSocials] = useState<SocialLink[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -47,6 +49,17 @@ const Index = () => {
     link.href = profile.favicon_url;
   }, [profile?.favicon_url]);
 
+  // Live-update maintenance mode for normal users
+  useEffect(() => {
+    const ch = supabase
+      .channel("profile-maintenance")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "profiles" }, (payload) => {
+        setProfile((p) => (p ? { ...p, ...(payload.new as any) } : (payload.new as any)));
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, []);
+
   const goto = (id: Section) => {
     setActive(id);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -68,6 +81,19 @@ const Index = () => {
     contact: profile?.bg_contact_url,
   };
   const customBg = bgMap[active];
+
+  if (profile?.maintenance_mode && !isAdmin) {
+    return (
+      <main className="min-h-screen w-full flex items-center justify-center bg-white px-6 select-none">
+        <h1
+          className="text-3xl sm:text-5xl text-center text-neutral-900 tracking-wide"
+          style={{ fontFamily: '"Cormorant Garamond", "Playfair Display", Georgia, serif', fontStyle: "italic", fontWeight: 500, letterSpacing: "0.02em" }}
+        >
+          Website is updating
+        </h1>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen flex flex-col pb-28 relative">
