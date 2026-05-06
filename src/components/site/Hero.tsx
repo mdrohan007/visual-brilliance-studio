@@ -18,7 +18,7 @@ export const Hero = ({ profile, onExplore }: { profile: Profile | null; onExplor
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="rounded-3xl overflow-hidden glass shadow-card"
+        className="rounded-3xl overflow-hidden bg-transparent"
       >
         {/* Cover banner */}
         <div className="relative w-full aspect-[16/6] bg-muted">
