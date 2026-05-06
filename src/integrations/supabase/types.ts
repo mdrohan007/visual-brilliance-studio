@@ -84,6 +84,7 @@ export type Database = {
           hero_banner_url: string | null
           id: string
           logo_url: string | null
+          maintenance_mode: boolean
           title: string
           updated_at: string
           whatsapp: string | null
@@ -103,6 +104,7 @@ export type Database = {
           hero_banner_url?: string | null
           id?: string
           logo_url?: string | null
+          maintenance_mode?: boolean
           title?: string
           updated_at?: string
           whatsapp?: string | null
@@ -122,6 +124,7 @@ export type Database = {
           hero_banner_url?: string | null
           id?: string
           logo_url?: string | null
+          maintenance_mode?: boolean
           title?: string
           updated_at?: string
           whatsapp?: string | null
