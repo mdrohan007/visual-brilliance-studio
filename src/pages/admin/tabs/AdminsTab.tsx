@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Trash2, UserPlus } from "lucide-react";
 
-type Row = { user_id: string; role: string; email?: string };
+type Row = { user_id: string; role: string; is_primary?: boolean };
 
 export const AdminsTab = () => {
   const [rows, setRows] = useState<Row[]>([]);
@@ -14,7 +14,7 @@ export const AdminsTab = () => {
   const [pwd, setPwd] = useState("");
 
   const load = async () => {
-    const { data } = await supabase.from("user_roles").select("user_id, role").eq("role", "admin");
+    const { data } = await supabase.from("user_roles").select("user_id, role, is_primary").eq("role", "admin");
     setRows((data as any) ?? []);
   };
   useEffect(() => { load(); }, []);
@@ -33,7 +33,8 @@ export const AdminsTab = () => {
 
   const revoke = async (uid: string) => {
     if (!confirm("Revoke admin?")) return;
-    await supabase.from("user_roles").delete().eq("user_id", uid).eq("role", "admin");
+    const { error } = await supabase.from("user_roles").delete().eq("user_id", uid).eq("role", "admin");
+    if (error) return toast.error(error.message);
     toast.success("Revoked"); load();
   };
 
@@ -52,8 +53,13 @@ export const AdminsTab = () => {
         <ul className="space-y-2">
           {rows.map((r) => (
             <li key={r.user_id} className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
-              <span className="font-mono text-xs">{r.user_id}</span>
-              <Button size="icon" variant="ghost" onClick={() => revoke(r.user_id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+              <span className="font-mono text-xs truncate">
+                {r.user_id}
+                {r.is_primary && <span className="ml-2 px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] uppercase tracking-widest">Primary</span>}
+              </span>
+              {!r.is_primary && (
+                <Button size="icon" variant="ghost" onClick={() => revoke(r.user_id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+              )}
             </li>
           ))}
         </ul>
